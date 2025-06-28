@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>命名实体识别 | Hexo</title>
+  <meta name="description" content="python实战一 自然语言处理，命名实体识别，正则表达式，大模型api调用；针对数据中的“案例详情”这一块里面有很多内容，希望可以用数据挖掘的办法把案例详情中有关被告人的盗窃金额、性别、年龄、民族、受教育程度、职业、户籍所在地，这些信息给筛选出来。  数据展示：  1浙江省德清县人民法院刑 事 判 决 书（2018）浙0521刑初267号公诉机关德清县人民检察院。被告人卜建斌，男，1996年9月">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命名实体识别">
+<meta property="og:url" content="https://xia0ya.github.io/2025/06/28/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/index.html">
+<meta property="og:site_name" content="刘晓亮">
+<meta property="og:description" content="python实战一 自然语言处理，命名实体识别，正则表达式，大模型api调用；针对数据中的“案例详情”这一块里面有很多内容，希望可以用数据挖掘的办法把案例详情中有关被告人的盗窃金额、性别、年龄、民族、受教育程度、职业、户籍所在地，这些信息给筛选出来。  数据展示：  1浙江省德清县人民法院刑 事 判 决 书（2018）浙0521刑初267号公诉机关德清县人民检察院。被告人卜建斌，男，1996年9月">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xia0ya.github.io/img/1.jpg">
+<meta property="og:image" content="https://xia0ya.github.io/img/2.jpg">
+<meta property="article:published_time" content="2025-06-28T14:06:28.727Z">
+<meta property="article:modified_time" content="2025-06-28T14:10:49.121Z">
+<meta property="article:author" content="刘晓亮">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="正则化">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xia0ya.github.io/img/1.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://xia0ya.github.io/2025/06/28/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="刘晓亮" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    <link href="//cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" rel="stylesheet">
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/xia0ya" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">xia0ya</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">历历山河间，岁月如初见</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> ZheJiang, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xia0ya" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/">数理统计</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E9%87%8F%E7%BB%8F%E6%B5%8E%E5%AD%A6/">计量经济学</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E7%BA%A7ms/" rel="tag">二级ms</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BD%9C%E4%B8%9A/" rel="tag">作业</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8B%98%E8%AF%AF/" rel="tag">勘误</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E8%AF%8D/" rel="tag">单词</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%96%E5%88%8A/" rel="tag">外刊</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%9A%E5%85%83%E7%BB%9F%E8%AE%A1/" rel="tag">多元统计</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%98%E6%8A%84/" rel="tag">摘抄</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%B2%E6%9F%93/" rel="tag">渲染</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/python/" style="font-size: 13px;">python</a> <a href="/tags/%E4%BA%8C%E7%BA%A7ms/" style="font-size: 13px;">二级ms</a> <a href="/tags/%E4%BD%9C%E4%B8%9A/" style="font-size: 13px;">作业</a> <a href="/tags/%E5%8B%98%E8%AF%AF/" style="font-size: 13px;">勘误</a> <a href="/tags/%E5%8D%95%E8%AF%8D/" style="font-size: 13px;">单词</a> <a href="/tags/%E5%A4%96%E5%88%8A/" style="font-size: 14px;">外刊</a> <a href="/tags/%E5%A4%9A%E5%85%83%E7%BB%9F%E8%AE%A1/" style="font-size: 14px;">多元统计</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 13px;">大模型</a> <a href="/tags/%E6%91%98%E6%8A%84/" style="font-size: 13px;">摘抄</a> <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" style="font-size: 13px;">正则化</a> <a href="/tags/%E6%B8%B2%E6%9F%93/" style="font-size: 13px;">渲染</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/06/">六月 2025</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">三月 2025</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">二月 2025</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/python/">python</a>
+              </p>
+              <p class="item-title">
+                <a href="/2025/06/28/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" class="title">命名实体识别</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2025-06-28T14:06:28.727Z" itemprop="datePublished">2025-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a>
+              </p>
+              <p class="item-title">
+                <a href="/2025/03/29/%E4%BA%8C%E7%BA%A7MS%E7%AC%94%E8%AE%B0/" class="title">二级ms部分笔记</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2025-03-29T15:01:07.776Z" itemprop="datePublished">2025-03-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a>
+              </p>
+              <p class="item-title">
+                <a href="/2025/03/21/%E6%AF%8F%E6%97%A5%E5%A4%96%E5%88%8A%E7%94%9F%E8%AF%8D%E7%A7%80%E5%8F%A5/" class="title">South Korea&#39;s impeached president is arrested. Now what?</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2025-03-21T00:41:08.908Z" itemprop="datePublished">2025-03-21</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E8%AE%A1%E9%87%8F%E7%BB%8F%E6%B5%8E%E5%AD%A6/">计量经济学</a>
+              </p>
+              <p class="item-title">
+                <a href="/2025/03/19/%E8%AE%A1%E9%87%8F%E7%BB%8F%E6%B5%8E%E5%AD%A6%E4%BD%9C%E4%B8%9A%E4%B8%80/" class="title">计量经济学作业一</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2025-03-19T14:22:16.607Z" itemprop="datePublished">2025-03-19</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/">数理统计</a>
+              </p>
+              <p class="item-title">
+                <a href="/2025/03/19/%E5%A4%9A%E5%85%83%E7%BB%9F%E8%AE%A1%E7%9B%B8%E5%85%B3%E4%B9%A0%E9%A2%98/" class="title">多元统计笔记及习题</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2025-03-19T14:19:57.847Z" itemprop="datePublished">2025-03-19</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-命名实体识别" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      命名实体识别
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2025/06/28/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" class="article-date">
+	  <time datetime="2025-06-28T14:06:28.727Z" itemprop="datePublished">2025-06-28</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/python/" rel="tag">python</a>, <a class="article-tag-link-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a>, <a class="article-tag-link-link" href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag">正则化</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2025/06/28/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="python实战一"><a href="#python实战一" class="headerlink" title="python实战一"></a>python实战一</h1><hr>
+<p>自然语言处理，命名实体识别，正则表达式，大模型api调用；<br>针对数据中的“案例详情”这一块里面有很多内容，希望可以用数据挖掘的办法把案例详情中有关被告人的盗窃金额、性别、年龄、民族、受教育程度、职业、户籍所在地，这些信息给筛选出来。</p>
+<hr>
+<p>数据展示：</p>
+<p><img src="/img/1.jpg" alt="数据展示"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浙江省德清县人民法院刑 事 判 决 书（2018）浙0521刑初267号公诉机关德清县人民检察院。被告人卜建斌，男，1996年9月6日出生，汉族，文化程度初中，农民，云南省广南县人，家住云南省文山壮族苗族自治州广南县。2013年10月15日因犯盗窃罪被本院判处拘役五个月，同年11月7日刑满释放；2015年11月3日因犯盗窃罪被杭州市余杭区人民法院判处拘役四个月，同年11月16日刑满释放。2018年4月2日因本案被德清县公安局刑事拘留，同年4月28日被依法逮捕。现羁押于德清县看守所。德清县人民检察院以德检未检刑诉[2018]15号起诉书指控被告人卜建斌犯盗窃罪，于2018年6月26日向本院提起公诉。本院依法适用简易程序，实行独任审判，公开开庭审理了本案。德清县人民检察院指派检察员宣某出庭支持公诉，被告人卜建斌到庭参加诉讼。本案现已审理终结。公诉机关起诉书指控：1.2018年3月28日下午，被告人卜建斌结伙何某某（另案处理）采用翻窗等手段进入本县雷甸镇新利村北坝8号租房内，窃得失主张敏放在该房一鞋盒内的现金人民币600余元。2.2018年3月31日左右某日中午，被告人卜建斌采用翻窗等手段进入本县雷甸镇新利村三家村5-16号租房内，窃得失主刘某放在该房内现金人民币63元及移动定制手机1部。经认定，被盗手机价值人民币562.5元。3．2018年4月1日下午2时许，被告人卜建斌采用翻窗等手段进入本县雷甸镇新利村鲁家湾11号租房内，窃得失主蒯某放在该房电视机柜抽屉内的现金人民币3287.5元。案发后，公安机关扣押被盗手机一部及现金人民币3070元并发还失主。综上，被告人卜建斌单独或结伙实施入户盗窃共3起，总价值人民币4513余元。上述事实，被告人卜建斌在开庭审理过程中亦无异议，并有书证人口信息、前科查询、刑事判决书、刑满释放证明书、抓获经过、情况说明、收条、领条、扣押清单、发还清单、同案人何某某的供述、失主张敏、蒯某、刘某的陈述、价格认定结论书、现场勘查笔录、辨认现场笔录、辨认笔录、搜查笔录、搜查照片、扣押照片、发还照片等证据证实，足以认定。本院认为，被告人卜建斌单独或者结伙以非法占有为目的，多次入户秘密窃取公私财物，数额较大，其行为已构成盗窃罪。公诉机关指控的罪名成立。被告人卜建斌虽不具有自首情节，但在归案后能如实供述其罪行，予以从轻处罚。为维护社会治安秩序，保护公私合法财产不受侵犯，依照《中华人民共和国刑法》第二百六十四条、第二十五条第一款、第六十七条第三款、第五十二条、第五十三条之规定，判决如下：被告人卜建斌犯盗窃罪，判处有期徒刑六个月，并处罚金人民币一千五百元（刑期从判决执行之日起计算；判决执行以前先行羁押的，羁押一日折抵刑期一日，即自2018年4月2日起至2018年10月1日止；罚金限于判决生效后十日内缴纳）。如不服本判决，可在接到判决书的第二日起十日内，通过本院或者直接向浙江省湖州市中级人民法院提出上诉。书面上诉的，应当提交上诉状正本一份，副本二份。审 判 员杨军二〇一八年七月五日代书记员娄丹</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="正则表达式应用"><a href="#正则表达式应用" class="headerlink" title="正则表达式应用"></a>正则表达式应用</h2><p>批处理</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm  <span class="comment"># 添加进度条库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 预编译正则表达式以提高性能</span></span><br><span class="line">CASH_PATTERN = re.<span class="built_in">compile</span>(<span class="string">r'窃得.*?现金人民币(\d+(?:\.\d+)?)余?元'</span>)</span><br><span class="line">ITEM_PATTERNS = [</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'价值人民币(\d+(?:\.\d+)?)元'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'价值(\d+(?:\.\d+)?)元'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'经.*?价格认证中心认定.*?价值人民币(\d+(?:\.\d+)?)元'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'该被窃.*?价值人民币(\d+(?:\.\d+)?)元'</span>)</span><br><span class="line">]</span><br><span class="line">TOTAL_PATTERNS = [</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'总价值人民币(\d+(?:\.\d+)?)余?元'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'涉案总价值共计人民币(\d+(?:\.\d+)?)元'</span>)</span><br><span class="line">]</span><br><span class="line">BIRTH_PATTERN = re.<span class="built_in">compile</span>(<span class="string">r'(\d{4})年(\d{1,2})月(\d{1,2})日(?:出生|生)'</span>)</span><br><span class="line">ETHNICITY_PATTERN = re.<span class="built_in">compile</span>(<span class="string">r'，(\w+)族，'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义职业列表</span></span><br><span class="line">OCCUPATIONS = [</span><br><span class="line">    <span class="string">'无业'</span>,</span><br><span class="line">    <span class="string">'务工'</span>,</span><br><span class="line">    <span class="string">'农民'</span>,</span><br><span class="line">    <span class="string">'职工'</span>,</span><br><span class="line">    <span class="string">'水泥工'</span>,</span><br><span class="line">    <span class="string">'渔民'</span>,</span><br><span class="line">    <span class="string">'非农户'</span>,</span><br><span class="line">    <span class="string">'理发师'</span>,</span><br><span class="line">    <span class="string">'无固定职业'</span>,</span><br><span class="line">    <span class="string">'无职业'</span>,</span><br><span class="line">    <span class="string">'无业'</span>,</span><br><span class="line">    <span class="string">'个体户'</span>,</span><br><span class="line">    <span class="string">'公司员工'</span>,</span><br><span class="line">    <span class="string">'个体经营'</span>,</span><br><span class="line">    <span class="string">'个体工商户'</span>,</span><br><span class="line">    <span class="string">'网络销售'</span>,</span><br><span class="line">    <span class="string">'公司主管'</span>,</span><br><span class="line">    <span class="string">'车行销售'</span>,</span><br><span class="line">    <span class="string">'居民'</span>,</span><br><span class="line">    <span class="string">'铁匠'</span>,</span><br><span class="line">    <span class="string">'经商'</span>,</span><br><span class="line">    <span class="string">'工人'</span>,</span><br><span class="line">    <span class="string">'驾驶员'</span>,</span><br><span class="line">    <span class="string">'职员'</span>,</span><br><span class="line">    <span class="string">'学生'</span>,</span><br><span class="line">    <span class="string">'退休教师'</span>,</span><br><span class="line">    <span class="string">'职业教育中心教师'</span>,</span><br><span class="line">    <span class="string">'实习教师'</span>,</span><br><span class="line">    <span class="string">'职业学院教师'</span>,</span><br><span class="line">    <span class="string">'教育学院教师'</span>,</span><br><span class="line">    <span class="string">'小学教师'</span>,</span><br><span class="line">    <span class="string">'舞蹈教师'</span>,</span><br><span class="line">    <span class="string">'医生'</span>,</span><br><span class="line">    <span class="string">'司机'</span>,</span><br><span class="line">    <span class="string">'厨师'</span>,</span><br><span class="line">    <span class="string">'保安'</span>,</span><br><span class="line">    <span class="string">'服务员'</span>,</span><br><span class="line">    <span class="string">'销售员'</span>,</span><br><span class="line">    <span class="string">'销售代表'</span>,</span><br><span class="line">    <span class="string">'销售经理'</span>,</span><br><span class="line">    <span class="string">'居民'</span>,</span><br><span class="line">    <span class="string">'项目经理'</span>,</span><br><span class="line">    <span class="string">'酒店副经理'</span>,</span><br><span class="line">    <span class="string">'佯装印花厂老板'</span>,</span><br><span class="line">    <span class="string">'兴和服饰老板'</span>,</span><br><span class="line">    <span class="string">'足浴店老板'</span>,</span><br><span class="line">    <span class="string">'退休'</span>,</span><br><span class="line">    <span class="string">'待业'</span>,</span><br><span class="line">    <span class="string">'退休工人'</span>,</span><br><span class="line">    <span class="string">'公司职员'</span>,</span><br><span class="line">    <span class="string">'温州博伟美容美发咨询有限公司拓展部经理'</span>,</span><br><span class="line">    <span class="string">'员工'</span>,</span><br><span class="line">    <span class="string">'KTV营销经理'</span>,</span><br><span class="line">    <span class="string">'足浴店经理'</span>,</span><br><span class="line">    <span class="string">'酒吧经理'</span>,</span><br><span class="line">    <span class="string">'项目经理'</span>,</span><br><span class="line">    <span class="string">'职业经理人'</span>,</span><br><span class="line">    <span class="string">'娱乐会所总经理'</span>,</span><br><span class="line">    <span class="string">'购物中心信息部经理'</span>,</span><br><span class="line">    <span class="string">'打工'</span> ,<span class="string">'会计'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 户籍所在地匹配模式</span></span><br><span class="line">RESIDENCE_PATTERNS = [</span><br><span class="line">    <span class="comment"># 标准格式：xx省xx市xx县人（必须包含"人"字）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县人)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+县人)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+区人)'</span>),</span><br><span class="line">    <span class="comment"># 出生于xx省xx市xx县（必须包含"出生于"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'出生于([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'出生于([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 出生于xx省xx市（必须包含"出生于"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'出生于([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市)'</span>),</span><br><span class="line">    <span class="comment"># 出生地xx省xx市xx县（必须包含"出生地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'出生地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 出生地xx省xx市（必须包含"出生地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'出生地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市)'</span>),</span><br><span class="line">    <span class="comment"># 家住xx省xx市xx县（必须包含"家住"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'家住([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 户籍地xx省xx市xx县（必须包含"户籍地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 户籍地xx省xx市xx区（必须包含"户籍地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+区)'</span>),</span><br><span class="line">    <span class="comment"># 户籍所在地xx市xx区（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍所在地([\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+区)'</span>),</span><br><span class="line">    <span class="comment"># 户籍所在地xx省xx市xx区（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍所在地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+区)'</span>),</span><br><span class="line">    <span class="comment"># 户籍所在地xx省xx市（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍所在地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市)'</span>),</span><br><span class="line">    <span class="comment"># 住xx县（必须包含"住"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'住([\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 住xx市（必须包含"住"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'住([\u4e00-\u9fa5]+市)'</span>),</span><br><span class="line">    <span class="comment"># 于xx省xx市（必须包含"于"）</span></span><br><span class="line">    <span class="comment">#re.compile(r'于([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市)'),</span></span><br><span class="line">    <span class="comment"># 家住xx县（必须包含"家住"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'家住([\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 自治区格式（必须包含"自治区"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+壮族自治区[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line"><span class="comment"># 户籍地xx省xx市xx县（必须包含"户籍地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 户籍地xx省xx市xx区（必须包含"户籍地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+区)'</span>),</span><br><span class="line">    <span class="comment"># 户籍所在地xx市xx区（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+区?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">       <span class="comment"># 户籍所在地xx市xx区（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+区)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+市)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+县)'</span>),</span><br><span class="line">    <span class="comment"># 户籍所在地xx省xx市xx区（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市?[\u4e00-\u9fa5]+区)'</span>),</span><br><span class="line">    <span class="comment"># 户籍所在地xx省xx市（必须包含"户籍所在地"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'户籍地([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+市)'</span>),</span><br><span class="line">    <span class="comment"># 自治州格式（必须包含"自治州"）</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+自治州[\u4e00-\u9fa5]+县)'</span>)</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 需要排除的机构名称关键词</span></span><br><span class="line">EXCLUDE_KEYWORDS = [<span class="string">'法院'</span>, <span class="string">'检察院'</span>, <span class="string">'人民法院'</span>,<span class="string">'公安局'</span>, <span class="string">'派出所'</span>, <span class="string">'监狱'</span>, <span class="string">'看守所'</span>, <span class="string">'司法局'</span>, <span class="string">'监狱管理局'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 受教育程度匹配模式</span></span><br><span class="line">EDUCATION_PATTERNS = [</span><br><span class="line">    <span class="comment"># 标准格式：xx文化</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+文化)'</span>),</span><br><span class="line">    <span class="comment"># 文化程度xx</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'文化程度([\u4e00-\u9fa5]+)'</span>),</span><br><span class="line">    <span class="comment"># 学历xx</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'学历([\u4e00-\u9fa5]+)'</span>),</span><br><span class="line">    <span class="comment"># 文化程度为xx</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'文化程度为([\u4e00-\u9fa5]+)'</span>),</span><br><span class="line">    <span class="comment"># 文化程度：xx</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'文化程度：([\u4e00-\u9fa5]+)'</span>),</span><br><span class="line">    <span class="comment"># 文盲</span></span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'(文盲)'</span>),</span><br><span class="line">    re.<span class="built_in">compile</span>(<span class="string">r'([\u4e00-\u9fa5]+肄业)'</span>),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">preprocess_text</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="string">"""预处理文本，只保留与提取信息相关的部分"""</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 1. 提取被告人基本信息部分（从"被告人"到第一个句号）</span></span><br><span class="line">    basic_info = <span class="string">""</span></span><br><span class="line">    basic_info_match = re.search(<span class="string">r'被告人.*?。'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> basic_info_match:</span><br><span class="line">        basic_info = basic_info_match.group(<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 2. 提取盗窃金额相关信息</span></span><br><span class="line">    amount_info = <span class="string">""</span></span><br><span class="line">    <span class="comment"># 提取所有包含金额的句子</span></span><br><span class="line">    amount_sentences = re.findall(<span class="string">r'[^。]*?(?:窃得|价值人民币|价值|现金人民币|人名币|总价值|涉案总价值|人民币)[^。]*?。'</span>, text)</span><br><span class="line">    amount_info = <span class="string">""</span>.join(amount_sentences)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 3. 合并处理后的文本</span></span><br><span class="line">    processed_text = basic_info + amount_info</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 4. 清理文本</span></span><br><span class="line">    <span class="comment"># 删除包含罚金相关内容的句子</span></span><br><span class="line">    processed_text = re.sub(<span class="string">r'[^。]*?(?:并处罚金|罚金|并处|单处罚金|附加刑|刑罚)[^。]*?。'</span>, <span class="string">''</span>, processed_text)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 删除包含退赔、返还、赔偿等内容的句子</span></span><br><span class="line">    processed_text = re.sub(<span class="string">r'[^。]*?(?:退赔|返还|赔偿|发还|退还|责令.*?退赔|责令.*?返还)[^。]*?。'</span>, <span class="string">''</span>, processed_text)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 删除多余的空格和换行符</span></span><br><span class="line">    processed_text = re.sub(<span class="string">r'\s+'</span>, <span class="string">' '</span>, processed_text)</span><br><span class="line">    <span class="comment"># 删除重复的标点符号</span></span><br><span class="line">    processed_text = re.sub(<span class="string">r'[，。；：、]{2,}'</span>, <span class="string">'，'</span>, processed_text)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> processed_text.strip()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_amount</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 优先提取"综上"后的总金额</span></span><br><span class="line">    zongshang_patterns = [</span><br><span class="line">        <span class="string">r'综上.*?价值人民币(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?共计价值人民币(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?共计价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?涉案财物共计价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?涉案财物价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?窃得财物共计价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?窃得财物价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?合计价值人民币(\d+(?:，\d+)*(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'综上.*?合计价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span></span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> pattern <span class="keyword">in</span> zongshang_patterns:</span><br><span class="line">        <span class="keyword">match</span> = re.search(pattern, text)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            amount_str = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># 处理逗号分隔的数字</span></span><br><span class="line">            amount_str = amount_str.replace(<span class="string">'，'</span>, <span class="string">''</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">float</span>(amount_str)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 优先提取总金额</span></span><br><span class="line">    total_patterns = [</span><br><span class="line">        <span class="string">r'总价值人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'共计人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'价值共计人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'价值共人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'总价值人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'共计人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'价值共计人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'价值共人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'损失价值共计人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'损失价值共计人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'价值达人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'共计价值人民币(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'共计价值(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'赃物价值人名币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'共计价值人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'窃得财物共计价值(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'窃得财物共计价值(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'窃得财物共计(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'窃得财物价值(\d+(?:\.\d+)?)余元'</span>,</span><br><span class="line">        <span class="string">r'共盗窃作案.*?窃得财物共计价值人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'共盗窃.*?窃得财物共计价值人民币(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'被窃财物价值共计(\d+(?:\.\d+)?)元'</span>,</span><br><span class="line">        <span class="string">r'价值共计(\d+(?:\.\d+)?)余?元'</span></span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> pattern <span class="keyword">in</span> total_patterns:</span><br><span class="line">        <span class="keyword">match</span> = re.search(pattern, text)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">float</span>(<span class="keyword">match</span>.group(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果没有总金额，则提取所有金额并求和</span></span><br><span class="line">    amount_contexts = []  <span class="comment"># 存储(金额, 上下文)的元组</span></span><br><span class="line">    patterns = [</span><br><span class="line">        <span class="string">r'(现金人民币|劫得人民币|（价值人民币5500元）|内有人民币|盗得人民币|内有现金|涉案布匹价值|窃取现金人民币|窃得硬币|窃取现金|窃取现金|窃取人民币|窃得.*?人民币|人民币|价值人民币)(\d+(?:，\d+)*(?:\.\d+)?)余?元'</span>,</span><br><span class="line">        <span class="comment">#r'价值人民币(\d+(?:\.\d+)?)元',</span></span><br><span class="line">        <span class="string">r'价值(\d+(?:，\d+)*(?:\.\d+)?)元'</span></span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># print(f"开始提取金额，文本片段: {text[:100]}...")</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i, pattern <span class="keyword">in</span> <span class="built_in">enumerate</span>(patterns):</span><br><span class="line">        <span class="comment"># print(f"测试模式 {i+1}: {pattern}")</span></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> re.finditer(pattern, text):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(m.groups()) == <span class="number">2</span>:  <span class="comment"># 第一个模式有两个组</span></span><br><span class="line">                prefix = m.group(<span class="number">1</span>)</span><br><span class="line">                amount_str = m.group(<span class="number">2</span>)</span><br><span class="line">                <span class="comment"># 处理逗号分隔的数字</span></span><br><span class="line">                amount_str = amount_str.replace(<span class="string">'，'</span>, <span class="string">''</span>)</span><br><span class="line">                amount = <span class="built_in">float</span>(amount_str)</span><br><span class="line">                <span class="comment"># print(f"  匹配到: 前缀='{prefix}', 金额={amount}")</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 其他模式只有一个组</span></span><br><span class="line">                amount_str = m.group(<span class="number">1</span>)</span><br><span class="line">                <span class="comment"># 处理逗号分隔的数字</span></span><br><span class="line">                amount_str = amount_str.replace(<span class="string">'，'</span>, <span class="string">''</span>)</span><br><span class="line">                amount = <span class="built_in">float</span>(amount_str)</span><br><span class="line">                <span class="comment"># print(f"  匹配到: 金额={amount}")</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 获取金额前后20个字符作为上下文</span></span><br><span class="line">            start, end = m.start(), m.end()</span><br><span class="line">            context = text[<span class="built_in">max</span>(<span class="number">0</span>, start-<span class="number">20</span>):<span class="built_in">min</span>(<span class="built_in">len</span>(text), end+<span class="number">20</span>)]</span><br><span class="line">            <span class="comment"># print(f"  上下文: '{context}'")</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 检查是否在"经鉴定"之后</span></span><br><span class="line">            is_after_jingjianding = <span class="literal">False</span></span><br><span class="line">            <span class="comment"># 查找金额位置之前的"经鉴定"</span></span><br><span class="line">            before_text = text[:start]</span><br><span class="line">            <span class="keyword">if</span> <span class="string">'经鉴定'</span> <span class="keyword">in</span> before_text:</span><br><span class="line">                <span class="comment"># 找到最近的"经鉴定"位置</span></span><br><span class="line">                jingjianding_pos = before_text.rfind(<span class="string">'经鉴定'</span>)</span><br><span class="line">                <span class="comment"># 如果"经鉴定"在金额前100个字符内，认为是鉴定结果</span></span><br><span class="line">                <span class="keyword">if</span> start - jingjianding_pos &lt;= <span class="number">100</span>:</span><br><span class="line">                    is_after_jingjianding = <span class="literal">True</span></span><br><span class="line">                    <span class="comment"># print(f"  在'经鉴定'之后，跳过排除检查")</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果不在"经鉴定"之后，才进行排除检查</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> is_after_jingjianding:</span><br><span class="line">                <span class="comment"># 如果上下文包含赔偿、退赔、返还、退还、发还等字样，则跳过</span></span><br><span class="line">                <span class="keyword">if</span> re.search(<span class="string">r'(赔偿|退赔|返还|退还|发还)'</span>, context):</span><br><span class="line">                    <span class="comment"># print(f"  跳过（包含排除关键词）")</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            amount_contexts.append((amount, context))</span><br><span class="line">            <span class="comment"># print(f"  添加到金额列表")</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 调试信息：打印所有提取到的金额</span></span><br><span class="line">    <span class="comment"># print(f"提取到的所有金额: {[amount for amount, _ in amount_contexts]}")</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 智能去重：相同金额且上下文相似度高的才去重</span></span><br><span class="line">    unique_amounts = []</span><br><span class="line">    <span class="keyword">for</span> amount, context <span class="keyword">in</span> amount_contexts:</span><br><span class="line">        is_duplicate = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">for</span> existing_amount, existing_context <span class="keyword">in</span> unique_amounts:</span><br><span class="line">            <span class="comment"># 如果金额相同且上下文相似度很高（可能是重复表述）</span></span><br><span class="line">            similarity = _context_similarity(context, existing_context)</span><br><span class="line">            <span class="keyword">if</span> amount == existing_amount <span class="keyword">and</span> similarity &gt; <span class="number">0.6</span>:  <span class="comment"># 降低相似度阈值</span></span><br><span class="line">                is_duplicate = <span class="literal">True</span></span><br><span class="line">                <span class="comment"># print(f"发现重复金额 {amount}，上下文相似度: {similarity:.3f}")</span></span><br><span class="line">                <span class="comment"># print(f"  现有上下文: '{existing_context}'")</span></span><br><span class="line">                <span class="comment"># print(f"  新上下文: '{context}'")</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> is_duplicate:</span><br><span class="line">            unique_amounts.append((amount, context))</span><br><span class="line">            <span class="comment"># print(f"添加新金额: {amount}，上下文: '{context}'")</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 调试信息：打印去重后的金额</span></span><br><span class="line">    <span class="comment"># print(f"去重后的金额: {[amount for amount, _ in unique_amounts]}")</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 返回去重后的金额总和</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(amount <span class="keyword">for</span> amount, _ <span class="keyword">in</span> unique_amounts) <span class="keyword">if</span> unique_amounts <span class="keyword">else</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_context_similarity</span>(<span class="params">context1, context2</span>):</span><br><span class="line">    <span class="string">"""计算两个上下文的相似度"""</span></span><br><span class="line">    <span class="comment"># 简单的相似度计算：共同字符数 / 较长字符串的长度</span></span><br><span class="line">    common_chars = <span class="built_in">sum</span>(<span class="number">1</span> <span class="keyword">for</span> c <span class="keyword">in</span> context1 <span class="keyword">if</span> c <span class="keyword">in</span> context2)</span><br><span class="line">    max_len = <span class="built_in">max</span>(<span class="built_in">len</span>(context1), <span class="built_in">len</span>(context2))</span><br><span class="line">    <span class="keyword">return</span> common_chars / max_len <span class="keyword">if</span> max_len &gt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_gender</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line">    <span class="comment"># 优先匹配"性别男"或"性别女"</span></span><br><span class="line">    <span class="keyword">match</span> = re.search(<span class="string">r'性别([男女])'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'男'</span> <span class="keyword">if</span> <span class="string">'男'</span> <span class="keyword">in</span> text <span class="keyword">else</span> <span class="string">'女'</span> <span class="keyword">if</span> <span class="string">'女'</span> <span class="keyword">in</span> text <span class="keyword">else</span> <span class="string">'未知'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_age</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 更精确的出生日期匹配，要求包含"出生于"或"XXX生"</span></span><br><span class="line">    <span class="comment"># 只匹配被告人基本信息部分的出生日期</span></span><br><span class="line">    basic_info_match = re.search(<span class="string">r'被告人.*?。'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> basic_info_match:</span><br><span class="line">        basic_info = basic_info_match.group(<span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 匹配包含"出生于"的日期</span></span><br><span class="line">        birth_match = re.search(<span class="string">r'(\d{4})年(\d{1,2})月(\d{1,2})日出生于'</span>, basic_info)</span><br><span class="line">        <span class="keyword">if</span> birth_match:</span><br><span class="line">            birth_year = <span class="built_in">int</span>(birth_match.group(<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">return</span> datetime.now().year - birth_year</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 匹配包含"XXX生"的日期</span></span><br><span class="line">        birth_match2 = re.search(<span class="string">r'(\d{4})年(\d{1,2})月(\d{1,2})日生'</span>, basic_info)</span><br><span class="line">        <span class="keyword">if</span> birth_match2:</span><br><span class="line">            birth_year = <span class="built_in">int</span>(birth_match2.group(<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">return</span> datetime.now().year - birth_year</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 匹配包含"XXX出生"的日期</span></span><br><span class="line">        birth_match2 = re.search(<span class="string">r'(\d{4})年(\d{1,2})月(\d{1,2})日出生'</span>, basic_info)</span><br><span class="line">        <span class="keyword">if</span> birth_match2:</span><br><span class="line">            birth_year = <span class="built_in">int</span>(birth_match2.group(<span class="number">1</span>))</span><br><span class="line">            <span class="keyword">return</span> datetime.now().year - birth_year</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_ethnicity</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line">    <span class="comment"># 优先匹配"民族汉族"等</span></span><br><span class="line">    <span class="keyword">match</span> = re.search(<span class="string">r'民族([\u4e00-\u9fa5]+族)'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 更精确的民族匹配</span></span><br><span class="line">    search_text = text[:<span class="number">200</span>]</span><br><span class="line">    ethnicity_match = re.search(<span class="string">r'，(\w+)族[，。]'</span>, search_text)</span><br><span class="line">    <span class="keyword">if</span> ethnicity_match:</span><br><span class="line">        ethnicity = ethnicity_match.group(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">any</span>(keyword <span class="keyword">in</span> ethnicity <span class="keyword">for</span> keyword <span class="keyword">in</span> [<span class="string">'省'</span>, <span class="string">'市'</span>, <span class="string">'县'</span>, <span class="string">'区'</span>, <span class="string">'镇'</span>, <span class="string">'村'</span>]):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(ethnicity), <span class="number">0</span>, -<span class="number">1</span>):</span><br><span class="line">                potential_ethnicity = ethnicity[-i:]</span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">len</span>(potential_ethnicity) &lt;= <span class="number">3</span> <span class="keyword">and</span> potential_ethnicity <span class="keyword">in</span> [<span class="string">'汉'</span>, <span class="string">'满'</span>, <span class="string">'蒙'</span>, <span class="string">'回'</span>, <span class="string">'藏'</span>, <span class="string">'维'</span>, <span class="string">'壮'</span>, <span class="string">'苗'</span>, <span class="string">'彝'</span>, <span class="string">'土'</span>, <span class="string">'瑶'</span>, <span class="string">'侗'</span>, <span class="string">'白'</span>, <span class="string">'哈'</span>, <span class="string">'傣'</span>, <span class="string">'黎'</span>, <span class="string">'傈'</span>, <span class="string">'佤'</span>, <span class="string">'畲'</span>, <span class="string">'拉'</span>, <span class="string">'水'</span>, <span class="string">'东'</span>, <span class="string">'纳'</span>, <span class="string">'景'</span>, <span class="string">'柯'</span>, <span class="string">'达'</span>, <span class="string">'仫'</span>, <span class="string">'羌'</span>, <span class="string">'布'</span>, <span class="string">'毛'</span>, <span class="string">'仡'</span>, <span class="string">'阿'</span>, <span class="string">'普'</span>, <span class="string">'鄂'</span>, <span class="string">'怒'</span>, <span class="string">'京'</span>, <span class="string">'基'</span>, <span class="string">'德'</span>, <span class="string">'保'</span>, <span class="string">'裕'</span>, <span class="string">'乌'</span>, <span class="string">'门'</span>, <span class="string">'独'</span>, <span class="string">'鄂'</span>, <span class="string">'赫'</span>, <span class="string">'珞'</span>, <span class="string">'塔'</span>, <span class="string">'土'</span>, <span class="string">'撒'</span>, <span class="string">'锡'</span>, <span class="string">'俄'</span>, <span class="string">'鄂'</span>, <span class="string">'鄂'</span>, <span class="string">'鄂'</span>]:</span><br><span class="line">                    <span class="keyword">return</span> potential_ethnicity</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> ethnicity</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_education</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line">    <span class="comment"># 优先匹配"文化程度高中"、"文化程度为高中"、"文化程度：高中"、"学历高中"、"文化程度高中"、"文化程度为高中"、"文化程度：高中"</span></span><br><span class="line">    <span class="keyword">match</span> = re.search(<span class="string">r'文化程度[为：]?([\u4e00-\u9fa5]+)'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">        education = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">any</span>(keyword <span class="keyword">in</span> education <span class="keyword">for</span> keyword <span class="keyword">in</span> [<span class="string">'省'</span>, <span class="string">'市'</span>, <span class="string">'县'</span>, <span class="string">'区'</span>, <span class="string">'镇'</span>, <span class="string">'村'</span>]):</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="string">'文盲'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'文盲'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'小学'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'小学'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'初中'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'初中'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'高中'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'高中'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'大学'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'大学'</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> education</span><br><span class="line">    <span class="comment"># 匹配"学历高中"</span></span><br><span class="line">    match2 = re.search(<span class="string">r'学历([\u4e00-\u9fa5]+)'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> match2:</span><br><span class="line">        education = match2.group(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">any</span>(keyword <span class="keyword">in</span> education <span class="keyword">for</span> keyword <span class="keyword">in</span> [<span class="string">'省'</span>, <span class="string">'市'</span>, <span class="string">'县'</span>, <span class="string">'区'</span>, <span class="string">'镇'</span>, <span class="string">'村'</span>]):</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="string">'文盲'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'文盲'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'小学'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'小学'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'初中'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'初中'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'高中'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'高中'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'大学'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'大学'</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> education</span><br><span class="line">    <span class="comment"># 匹配"文盲"</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">'文盲'</span> <span class="keyword">in</span> text:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'文盲'</span></span><br><span class="line">    <span class="comment"># 只在前200个字符中查找</span></span><br><span class="line">    search_text = text[:<span class="number">200</span>]</span><br><span class="line">    <span class="keyword">for</span> pattern <span class="keyword">in</span> EDUCATION_PATTERNS:</span><br><span class="line">        <span class="keyword">match</span> = pattern.search(search_text)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            education = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">any</span>(keyword <span class="keyword">in</span> education <span class="keyword">for</span> keyword <span class="keyword">in</span> [<span class="string">'省'</span>, <span class="string">'市'</span>, <span class="string">'县'</span>, <span class="string">'区'</span>, <span class="string">'镇'</span>, <span class="string">'村'</span>]):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">'文盲'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'文盲'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'小学'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'小学'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'初中'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'初中'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'高中'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'高中'</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="string">'大学'</span> <span class="keyword">in</span> education:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'大学'</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> education</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_occupation</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 只在前100个字符中查找职业</span></span><br><span class="line">    search_text = text[:<span class="number">100</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 在文本中查找预定义的职业</span></span><br><span class="line">    <span class="keyword">for</span> occupation <span class="keyword">in</span> OCCUPATIONS:</span><br><span class="line">        <span class="keyword">if</span> occupation <span class="keyword">in</span> search_text:</span><br><span class="line">            <span class="keyword">return</span> occupation</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_residence</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line">    <span class="comment"># 优先匹配"户籍地xxx"、"户籍所在地xxx"</span></span><br><span class="line">    <span class="keyword">match</span> = re.search(<span class="string">r'户籍[地所在地]*([\u4e00-\u9fa5]+省[\u4e00-\u9fa5]+县)'</span>, text)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">        residence = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">any</span>(keyword <span class="keyword">in</span> residence <span class="keyword">for</span> keyword <span class="keyword">in</span> EXCLUDE_KEYWORDS):</span><br><span class="line">            <span class="keyword">return</span> residence</span><br><span class="line">    <span class="comment"># 只在前300个字符中查找</span></span><br><span class="line">    search_text = text[:<span class="number">300</span>]</span><br><span class="line">    <span class="keyword">for</span> pattern <span class="keyword">in</span> RESIDENCE_PATTERNS:</span><br><span class="line">        <span class="keyword">match</span> = pattern.search(search_text)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            residence = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">any</span>(keyword <span class="keyword">in</span> residence <span class="keyword">for</span> keyword <span class="keyword">in</span> EXCLUDE_KEYWORDS):</span><br><span class="line">                <span class="keyword">return</span> residence</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_birth_date</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 只在前200个字符中查找</span></span><br><span class="line">    search_text = text[:<span class="number">200</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">match</span> = BIRTH_PATTERN.search(search_text)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">        year, month, day = <span class="keyword">match</span>.groups()</span><br><span class="line">        <span class="comment"># 标准化日期格式</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">f"<span class="subst">{year}</span>-<span class="subst">{month.zfill(<span class="number">2</span>)}</span>-<span class="subst">{day.zfill(<span class="number">2</span>)}</span>"</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="string">'未知'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process_case_details</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 预处理文本</span></span><br><span class="line">        processed_text = preprocess_text(text)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> {</span><br><span class="line">            <span class="string">'原始文本'</span>: text,  <span class="comment"># 添加原始文本</span></span><br><span class="line">            <span class="string">'预处理文本'</span>: processed_text,  <span class="comment"># 添加预处理后的文本</span></span><br><span class="line">            <span class="string">'盗窃金额'</span>: extract_amount(processed_text),</span><br><span class="line">            <span class="string">'性别'</span>: extract_gender(processed_text),</span><br><span class="line">            <span class="string">'年龄'</span>: extract_age(processed_text),</span><br><span class="line">            <span class="string">'民族'</span>: extract_ethnicity(processed_text),</span><br><span class="line">            <span class="string">'受教育程度'</span>: extract_education(processed_text),</span><br><span class="line">            <span class="string">'职业'</span>: extract_occupation(processed_text),</span><br><span class="line">            <span class="string">'户籍所在地'</span>: extract_residence(processed_text)</span><br><span class="line">        }</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"处理文本时出错: <span class="subst">{<span class="built_in">str</span>(e)}</span>"</span>)</span><br><span class="line">        <span class="keyword">return</span> {</span><br><span class="line">            <span class="string">'原始文本'</span>: text,</span><br><span class="line">            <span class="string">'预处理文本'</span>: <span class="string">''</span>,</span><br><span class="line">            <span class="string">'盗窃金额'</span>: <span class="literal">None</span>,</span><br><span class="line">            <span class="string">'性别'</span>: <span class="string">'未知'</span>,</span><br><span class="line">            <span class="string">'年龄'</span>: <span class="literal">None</span>,</span><br><span class="line">            <span class="string">'民族'</span>: <span class="string">'未知'</span>,</span><br><span class="line">            <span class="string">'受教育程度'</span>: <span class="string">'未知'</span>,</span><br><span class="line">            <span class="string">'职业'</span>: <span class="string">'未知'</span>,</span><br><span class="line">            <span class="string">'户籍所在地'</span>: <span class="string">'未知'</span></span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process_data_in_batches</span>(<span class="params">input_file, output_file, batch_size=<span class="number">2000</span></span>):</span><br><span class="line">    <span class="comment"># 读取所有数据</span></span><br><span class="line">    df = pd.read_excel(input_file)</span><br><span class="line">    <span class="comment"># df = df.head(500)</span></span><br><span class="line">    total_rows = <span class="built_in">len</span>(df)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算需要处理的批次数</span></span><br><span class="line">    num_batches = (total_rows + batch_size - <span class="number">1</span>) // batch_size</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 创建一个空的DataFrame来存储所有结果</span></span><br><span class="line">    all_results = pd.DataFrame()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> batch_num <span class="keyword">in</span> <span class="built_in">range</span>(num_batches):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"Processing batch <span class="subst">{batch_num + <span class="number">1</span>}</span>/<span class="subst">{num_batches}</span>"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 计算当前批次的起始和结束索引</span></span><br><span class="line">        start_idx = batch_num * batch_size</span><br><span class="line">        end_idx = <span class="built_in">min</span>((batch_num + <span class="number">1</span>) * batch_size, total_rows)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 获取当前批次的数据</span></span><br><span class="line">        batch_df = df.iloc[start_idx:end_idx].copy()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 处理当前批次的数据</span></span><br><span class="line">        batch_df[<span class="string">'预处理文本'</span>] = batch_df[<span class="string">'案例详情'</span>].apply(preprocess_text)</span><br><span class="line">        batch_df[<span class="string">'盗窃金额'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_amount)</span><br><span class="line">        batch_df[<span class="string">'性别'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_gender)</span><br><span class="line">        batch_df[<span class="string">'年龄'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_age)</span><br><span class="line">        batch_df[<span class="string">'出生日期'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_birth_date)</span><br><span class="line">        batch_df[<span class="string">'民族'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_ethnicity)</span><br><span class="line">        batch_df[<span class="string">'受教育程度'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_education)</span><br><span class="line">        batch_df[<span class="string">'职业'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_occupation)</span><br><span class="line">        batch_df[<span class="string">'户籍所在地'</span>] = batch_df[<span class="string">'预处理文本'</span>].apply(extract_residence)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 将当前批次的结果添加到总结果中</span></span><br><span class="line">        all_results = pd.concat([all_results, batch_df], ignore_index=<span class="literal">True</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 每处理完一批就保存一次，以防程序中断</span></span><br><span class="line">        all_results.to_excel(output_file, index=<span class="literal">False</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"Saved progress to <span class="subst">{output_file}</span>"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"All batches processed successfully!"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    input_file = <span class="string">"zhejiang output.xlsx"</span>  <span class="comment"># 输入文件：包含原始案例数据的Excel文件</span></span><br><span class="line">    output_file = <span class="string">"数据2.xlsx"</span>  <span class="comment"># 输出文件：处理后的结果文件</span></span><br><span class="line">    process_data_in_batches(input_file, output_file) </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="大模型api调用"><a href="#大模型api调用" class="headerlink" title="大模型api调用"></a>大模型api调用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化Kimi(Moonshot)客户端</span></span><br><span class="line">client = OpenAI(</span><br><span class="line">    api_key=<span class="string">"xxx"</span>, <span class="comment"># 替换为你的API Key</span></span><br><span class="line">    base_url=<span class="string">"https://api.moonshot.cn/v1"</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取Excel数据</span></span><br><span class="line">input_file = <span class="string">"测试.xlsx"</span></span><br><span class="line">df = pd.read_excel(input_file)</span><br><span class="line"><span class="comment"># df = df.head(50)</span></span><br><span class="line"><span class="keyword">if</span> <span class="string">'案例详情'</span> <span class="keyword">not</span> <span class="keyword">in</span> df.columns:</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">'未找到"案例详情"列'</span>)</span><br><span class="line"></span><br><span class="line">case_texts = df[<span class="string">'案例详情'</span>].astype(<span class="built_in">str</span>).tolist()</span><br><span class="line">batch_size = <span class="number">5</span>  <span class="comment"># 减小批次大小以适应TPM限制</span></span><br><span class="line"></span><br><span class="line">output_rows = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(case_texts), batch_size):</span><br><span class="line">    batch = case_texts[i:i+batch_size]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f"处理批次 <span class="subst">{i//batch_size + <span class="number">1</span>}</span>/<span class="subst">{(<span class="built_in">len</span>(case_texts) + batch_size - <span class="number">1</span>)//batch_size}</span>"</span>)</span><br><span class="line">    </span><br><span class="line">    user_content = <span class="string">f"""请从以下文本中提取盗窃总金额，需要汇总所有盗窃金额。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">要求：</span></span><br><span class="line"><span class="string">1. 如果文本中有多个盗窃金额，请将所有金额相加得到总金额</span></span><br><span class="line"><span class="string">2. 只返回JSON格式的金额数组，每个案例一个总金额</span></span><br><span class="line"><span class="string">3. 如果没有找到金额则返回null</span></span><br><span class="line"><span class="string">4. 金额应该是数字，不要包含"人民币"、"元"等文字</span></span><br><span class="line"><span class="string">5. 重要：只计算盗窃金额，不包括罚金、赔偿、退赔等处罚金额</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">示例格式：[391, null, 2500, 800, null]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">文本内容：<span class="subst">{json.dumps(batch, ensure_ascii=<span class="literal">False</span>)}</span>"""</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        completion = client.chat.completions.create(</span><br><span class="line">            model = <span class="string">"moonshot-v1-8k"</span>,</span><br><span class="line">            messages = [</span><br><span class="line">                {<span class="string">"role"</span>: <span class="string">"system"</span>, <span class="string">"content"</span>: <span class="string">"你是一个专门提取盗窃金额的助手。只返回JSON格式的金额数组，不要其他解释。"</span>},</span><br><span class="line">                {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: user_content}</span><br><span class="line">            ],</span><br><span class="line">            temperature = <span class="number">0.1</span>,  <span class="comment"># 降低随机性</span></span><br><span class="line">        )</span><br><span class="line">        content = completion.choices[<span class="number">0</span>].message.content.strip()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 尝试解析JSON</span></span><br><span class="line">            batch_data = json.loads(content)</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(batch_data, <span class="built_in">list</span>):</span><br><span class="line">                <span class="comment"># 确保列表长度与批次大小一致</span></span><br><span class="line">                <span class="keyword">while</span> <span class="built_in">len</span>(batch_data) &lt; <span class="built_in">len</span>(batch):</span><br><span class="line">                    batch_data.append(<span class="literal">None</span>)</span><br><span class="line">                batch_data = batch_data[:<span class="built_in">len</span>(batch)]  <span class="comment"># 截断多余的部分</span></span><br><span class="line">                </span><br><span class="line">                <span class="keyword">for</span> amount <span class="keyword">in</span> batch_data:</span><br><span class="line">                    output_rows.append({<span class="string">"盗窃总金额"</span>: amount})</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果不是列表，为每个批次项添加null</span></span><br><span class="line">                <span class="keyword">for</span> _ <span class="keyword">in</span> batch:</span><br><span class="line">                    output_rows.append({<span class="string">"盗窃总金额"</span>: <span class="literal">None</span>})</span><br><span class="line">                    </span><br><span class="line">        <span class="keyword">except</span> json.JSONDecodeError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"JSON解析失败: <span class="subst">{e}</span>"</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f"原始响应: <span class="subst">{content}</span>"</span>)</span><br><span class="line">            <span class="comment"># 为每个批次项添加null</span></span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> batch:</span><br><span class="line">                output_rows.append({<span class="string">"盗窃总金额"</span>: <span class="literal">None</span>})</span><br><span class="line">                </span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f"API调用失败: <span class="subst">{e}</span>"</span>)</span><br><span class="line">        <span class="comment"># 为每个批次项添加null</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> batch:</span><br><span class="line">            output_rows.append({<span class="string">"盗窃总金额"</span>: <span class="literal">None</span>})</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 根据RPM限制调整延迟</span></span><br><span class="line">    time.sleep(<span class="number">0.3</span>)  <span class="comment"># 200 RPM = 每3秒一个请求</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存为Excel</span></span><br><span class="line">output_df = pd.DataFrame(output_rows)</span><br><span class="line">output_df.to_excel(<span class="string">"output1.xlsx"</span>, index=<span class="literal">False</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f"处理完成，共处理 <span class="subst">{<span class="built_in">len</span>(output_rows)}</span> 条记录"</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">"已保存到output.xlsx"</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="NER命名实体识别"><a href="#NER命名实体识别" class="headerlink" title="NER命名实体识别"></a>NER命名实体识别</h2><h3 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> spacy</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载spaCy中文模型</span></span><br><span class="line">nlp = spacy.load(<span class="string">'zh_core_web_sm'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line">input_file = <span class="string">'extracted_case_info.xlsx'</span>  <span class="comment"># 路径根据实际情况调整</span></span><br><span class="line">output_file = <span class="string">'ner_extracted_case_info1.xlsx'</span></span><br><span class="line">df = pd.read_excel(input_file).head(<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查案例详情列</span></span><br><span class="line"><span class="keyword">if</span> <span class="string">'预处理文本'</span> <span class="keyword">not</span> <span class="keyword">in</span> df.columns:</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">'未找到"预处理文本"列'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义要提取的实体类型</span></span><br><span class="line">entity_types = [<span class="string">'PERSON'</span>, <span class="string">'GPE'</span>, <span class="string">'ORG'</span>, <span class="string">'DATE'</span>, <span class="string">'MONEY'</span>, <span class="string">'LOC'</span>, <span class="string">'NORP'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新增列用于存储NER结果</span></span><br><span class="line"><span class="keyword">for</span> ent_type <span class="keyword">in</span> entity_types:</span><br><span class="line">    df[<span class="string">f'NER_<span class="subst">{ent_type}</span>'</span>] = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_ner_entities</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> {et: [] <span class="keyword">for</span> et <span class="keyword">in</span> entity_types}</span><br><span class="line">    doc = nlp(text)</span><br><span class="line">    result = {et: [] <span class="keyword">for</span> et <span class="keyword">in</span> entity_types}</span><br><span class="line">    <span class="keyword">for</span> ent <span class="keyword">in</span> doc.ents:</span><br><span class="line">        <span class="keyword">if</span> ent.label_ <span class="keyword">in</span> entity_types:</span><br><span class="line">            result[ent.label_].append(ent.text)</span><br><span class="line">    <span class="comment"># 合并同类实体</span></span><br><span class="line">    <span class="keyword">return</span> {et: <span class="string">'；'</span>.join(<span class="built_in">set</span>(result[et])) <span class="keyword">for</span> et <span class="keyword">in</span> entity_types}</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理每条案例详情</span></span><br><span class="line"><span class="keyword">for</span> idx, row <span class="keyword">in</span> tqdm(df.iterrows(), total=<span class="built_in">len</span>(df)):</span><br><span class="line">    ner_result = extract_ner_entities(row[<span class="string">'预处理文本'</span>])</span><br><span class="line">    <span class="keyword">for</span> ent_type <span class="keyword">in</span> entity_types:</span><br><span class="line">        df.at[idx, <span class="string">f'NER_<span class="subst">{ent_type}</span>'</span>] = ner_result[ent_type]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存结果</span></span><br><span class="line">cols_to_save = [<span class="string">'预处理文本'</span>] + [<span class="string">f'NER_<span class="subst">{et}</span>'</span> <span class="keyword">for</span> et <span class="keyword">in</span> entity_types]</span><br><span class="line">df[cols_to_save].to_excel(output_file, index=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f'NER抽取结果已保存到 <span class="subst">{output_file}</span>'</span>) </span><br></pre></td></tr></table></figure>
+
+<h3 id="第二版"><a href="#第二版" class="headerlink" title="第二版"></a>第二版</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> spacy</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> extract_case_info <span class="keyword">import</span> (</span><br><span class="line">    preprocess_text, extract_amount, extract_gender, extract_age, extract_ethnicity,</span><br><span class="line">    extract_education, extract_occupation, extract_residence, extract_birth_date</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载spaCy中文模型</span></span><br><span class="line">nlp = spacy.load(<span class="string">'zh_core_web_sm'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line">input_file = <span class="string">'extracted_case_info.xlsx'</span>  <span class="comment"># 路径根据实际情况调整</span></span><br><span class="line">output_file = <span class="string">'case_info_with_ner.xlsx'</span></span><br><span class="line">df = pd.read_excel(input_file).head(<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查案例详情列</span></span><br><span class="line"><span class="keyword">if</span> <span class="string">'案例详情'</span> <span class="keyword">not</span> <span class="keyword">in</span> df.columns:</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">'未找到"案例详情"列'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义要提取的实体类型</span></span><br><span class="line">entity_types = [<span class="string">'PERSON'</span>, <span class="string">'GPE'</span>, <span class="string">'ORG'</span>, <span class="string">'DATE'</span>, <span class="string">'MONEY'</span>, <span class="string">'LOC'</span>, <span class="string">'NORP'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新增列用于存储NER结果</span></span><br><span class="line"><span class="keyword">for</span> ent_type <span class="keyword">in</span> entity_types:</span><br><span class="line">    df[<span class="string">f'NER_<span class="subst">{ent_type}</span>'</span>] = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新增正则/规则抽取列</span></span><br><span class="line">fields = [<span class="string">'盗窃金额'</span>, <span class="string">'性别'</span>, <span class="string">'年龄'</span>, <span class="string">'民族'</span>, <span class="string">'受教育程度'</span>, <span class="string">'职业'</span>, <span class="string">'户籍所在地'</span>, <span class="string">'出生日期'</span>]</span><br><span class="line"><span class="keyword">for</span> field <span class="keyword">in</span> fields:</span><br><span class="line">    <span class="keyword">if</span> field <span class="keyword">not</span> <span class="keyword">in</span> df.columns:</span><br><span class="line">        df[field] = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">extract_ner_entities</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(text, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">return</span> {et: [] <span class="keyword">for</span> et <span class="keyword">in</span> entity_types}</span><br><span class="line">    doc = nlp(text)</span><br><span class="line">    result = {et: [] <span class="keyword">for</span> et <span class="keyword">in</span> entity_types}</span><br><span class="line">    <span class="keyword">for</span> ent <span class="keyword">in</span> doc.ents:</span><br><span class="line">        <span class="keyword">if</span> ent.label_ <span class="keyword">in</span> entity_types:</span><br><span class="line">            result[ent.label_].append(ent.text)</span><br><span class="line">    <span class="comment"># 合并同类实体</span></span><br><span class="line">    <span class="keyword">return</span> {et: <span class="string">'；'</span>.join(<span class="built_in">set</span>(result[et])) <span class="keyword">for</span> et <span class="keyword">in</span> entity_types}</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理每条案例详情</span></span><br><span class="line"><span class="keyword">for</span> idx, row <span class="keyword">in</span> tqdm(df.iterrows(), total=<span class="built_in">len</span>(df)):</span><br><span class="line">    text = row[<span class="string">'案例详情'</span>]</span><br><span class="line">    <span class="comment"># 正则/规则抽取</span></span><br><span class="line">    processed_text = preprocess_text(text)</span><br><span class="line">    df.at[idx, <span class="string">'盗窃金额'</span>] = extract_amount(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'性别'</span>] = extract_gender(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'年龄'</span>] = extract_age(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'民族'</span>] = extract_ethnicity(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'受教育程度'</span>] = extract_education(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'职业'</span>] = extract_occupation(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'户籍所在地'</span>] = extract_residence(processed_text)</span><br><span class="line">    df.at[idx, <span class="string">'出生日期'</span>] = extract_birth_date(processed_text)</span><br><span class="line">    <span class="comment"># NER抽取</span></span><br><span class="line">    ner_result = extract_ner_entities(text)</span><br><span class="line">    <span class="keyword">for</span> ent_type <span class="keyword">in</span> entity_types:</span><br><span class="line">        df.at[idx, <span class="string">f'NER_<span class="subst">{ent_type}</span>'</span>] = ner_result[ent_type]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存结果</span></span><br><span class="line">cols_to_save = [<span class="string">'案例详情'</span>] + fields + [<span class="string">f'NER_<span class="subst">{et}</span>'</span> <span class="keyword">for</span> et <span class="keyword">in</span> entity_types]</span><br><span class="line">df[cols_to_save].to_excel(output_file, index=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f'融合抽取结果已保存到 <span class="subst">{output_file}</span>'</span>) </span><br></pre></td></tr></table></figure>
+
+<h2 id="最终结果如下"><a href="#最终结果如下" class="headerlink" title="最终结果如下"></a>最终结果如下</h2><p><img src="/img/2.jpg" alt="最终结果"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://xia0ya.github.io/2025/06/28/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" title="命名实体识别" target="_blank" rel="external">https://xia0ya.github.io/2025/06/28/命名实体识别/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/xia0ya" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/xia0ya" target="_blank"><span class="text-dark">xia0ya</span><small class="ml-1x">历历山河间，岁月如初见</small></a></h3>
+        <div>应统专业在读</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2025/03/29/%E4%BA%8C%E7%BA%A7MS%E7%AC%94%E8%AE%B0/" title="二级ms部分笔记"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/xia0ya" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
